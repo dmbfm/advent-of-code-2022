@@ -2,24 +2,24 @@
 #include <assert.h>
 #include <stdbool.h>
 
-bool isLower(char ch) {
+bool is_lower(char ch) {
     return ch >= 97 && ch <= 122;
 }
 
-bool isUpper(char ch) {
+bool is_upper(char ch) {
     return ch >= 65 && ch <= 90;
 }
 
-char toLower(char ch) {
-    if (isLower(ch)) {
+char to_lower(char ch) {
+    if (is_lower(ch)) {
         return ch;
     }
 
     return ch + 32;
 }
 
-char toUpper(char ch) {
-    if (isUpper(ch)) {
+char to_upper(char ch) {
+    if (is_upper(ch)) {
         return ch;
     }
 
@@ -27,9 +27,9 @@ char toUpper(char ch) {
 }
 
 int priority(char ch) {
-    if (isLower(ch)) {
+    if (is_lower(ch)) {
         return ch - 96;
-    } else if (isUpper(ch)) {
+    } else if (is_upper(ch)) {
         return ch - 38;
     } 
 
