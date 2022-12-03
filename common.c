@@ -2,6 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+void panic(const char *msg) {
+    printf("PANIC: %s\n", msg);
+    exit(1);
+}
+
 long c_file_size(FILE *f) {
     long old = ftell(f);
     fseek(f, 0, SEEK_END);
