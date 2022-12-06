@@ -37,8 +37,10 @@ int main() {
     // Part 2
      
     i = 0;
-    while (INPUT[i + 13]) {
+    while (1) {
 start:
+        if (!INPUT[i+13]) break;
+        
         for (int j = 0; j < 13; j++) {
             for (int k = j + 1; k < 14; k++) {
                 if (INPUT[i + j] == INPUT[i + k]) {
@@ -52,6 +54,5 @@ start:
         for (int j = 0; j < 14; j++) 
             printf("%c", INPUT[i+j]);
         break;
-        
     }
 }
