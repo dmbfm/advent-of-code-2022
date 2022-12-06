@@ -19,7 +19,7 @@ void init_lookup_table() {
 
 int main() {
     init_lookup_table();
-    
+
     int i = 0;
     while (INPUT[i+3]) {
         int32_t a = GET(i);
@@ -35,24 +35,24 @@ int main() {
     }
 
     // Part 2
-     
+
     i = 0;
-    while (1) {
 start:
-        if (!INPUT[i+13]) break;
-        
-        for (int j = 0; j < 13; j++) {
-            for (int k = j + 1; k < 14; k++) {
-                if (INPUT[i + j] == INPUT[i + k]) {
-                    i += (j + 1);
-                    goto start;
-                }
+    if (!INPUT[i+13]) {
+        printf("Failed to find message!");
+        return 0;
+    };
+
+    for (int j = 0; j < 13; j++) {
+        for (int k = j + 1; k < 14; k++) {
+            if (INPUT[i + j] == INPUT[i + k]) {
+                i += (j + 1);
+                goto start;
             }
         }
-
-        printf("%d: ", i+14);
-        for (int j = 0; j < 14; j++) 
-            printf("%c", INPUT[i+j]);
-        break;
     }
+
+    printf("%d: ", i+14);
+    for (int j = 0; j < 14; j++) 
+        printf("%c", INPUT[i+j]);
 }
