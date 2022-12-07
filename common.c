@@ -36,18 +36,22 @@ char **c_read_file_lines(const char *file_name) {
     
     int line_count = 0;
     for (int pass = 0; pass < 2; pass++) {
-        char *start = &buffer[0];
-        line_count = 0;
-        
         if (pass == 1) {
-            result = (char **) malloc((line_count + 1) * sizeof(char *));
+            result = (char **) malloc((line_count + 1) * sizeof(char *) + size + 1);
+            char *tmp = (char *) (result + (line_count + 1) * sizeof(char *));
+            memcpy(tmp, buffer, size + 1);
+            free(buffer);
+            buffer = tmp;
         }
 
+        char *start = &buffer[0];
+        line_count = 0;
+
         for (int i = 0; i < size; i++) {
-            
+
             char ch = buffer[i];
 
-            
+
             if (ch == '\n') {
                 line_count++;
                 if (pass == 1) {

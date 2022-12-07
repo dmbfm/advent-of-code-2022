@@ -117,10 +117,12 @@ int main() {
     fs.root = root;
 
     char **lines = c_read_file_lines("input");
+    char **lines_original = lines;
     char *line;
     dir_t *current_dir = root;
 
     while ((line = *lines++)) {
+        printf("%s\n", line);
         
         if (line[0] == '$') {
             // command
@@ -191,5 +193,7 @@ int main() {
     }
     
     printf("Smallest dir we can delete has size: %lu\n", smallest);
+
+    free(lines_original);
 }
 
