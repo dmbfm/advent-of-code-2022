@@ -25,7 +25,7 @@ void cpu_init(cpu_t *cpu) {
 void cpu_draw_pixel(cpu_t *cpu) {
     int px = (cpu->cycle - 1) % 40;
 
-    if (px >= (cpu->x -1) && px <= (cpu->x +1)) {
+    if (px >= (cpu->x - 1) && px <= (cpu->x + 1)) {
         printf("#");
     } else {
         printf(".");
