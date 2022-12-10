@@ -68,3 +68,16 @@ char **c_read_file_lines(const char *file_name) {
     return result;
 }
 
+int c_parse_int_range(char *start, int len) {
+    if (len >= 32) {
+        panic("[parse_int_range]: String too large!");
+    }
+    char buf[32];
+    for (int i = 0; i < len; i++) {
+        buf[i] = start[i];
+    }
+    buf[len] = 0;
+    
+    return atoi(buf);
+}
+
