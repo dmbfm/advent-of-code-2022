@@ -125,6 +125,17 @@ bool map_can_move(map_t *m, pos_t p, direction_t dir) {
     return final_value <= (start_value + 1);
 }
 
+
+bool map_can_move_part_2(map_t *m, pos_t p, direction_t dir) {
+    pos_t final = pos_move(p, dir);
+
+    int start_value = map_value_at_pos(m, p);
+    int final_value = map_value_at_pos(m, final);
+
+    return final_value >= (start_value - 1) && final_value < 1000;
+}
+
+
 void parse_map(map_t *m) {
     FILE *f = fopen(INPUT, "r");
     char buf[GRID_WIDTH+2];
@@ -182,8 +193,9 @@ void print_map_closed(map_t *m) {
     for (int a = 0; a < GRID_HEIGHT; a++) \
         for (int b = 0; b < GRID_WIDTH; b++) \
 
-int calc_number_of_steps_to_target(map_t *map, pos_t start) {
-    pos_t s = start;
+int calc_number_of_steps_to_target(map_t *map, bool is_part_two) {
+    
+    pos_t s = is_part_two ? map->end_pos : map->start_pos;
     pos_t e = map->end_pos;
 
     formap(row, col) {
@@ -207,7 +219,11 @@ int calc_number_of_steps_to_target(map_t *map, pos_t start) {
         for (int dir = 0; dir < 4; dir++) {
             
             // If neighbor is acessible and unvisited
-            if (map_can_move(map, current, dir) && !map_is_neighbor_visited(map, current, dir)) {
+            bool can_move = is_part_two ?
+                map_can_move_part_2(map, current, dir) :
+                map_can_move(map, current, dir);
+            
+            if (can_move && !map_is_neighbor_visited(map, current, dir)) {
                 
                 // Get neighbor position
                 pos_t neighbor_pos = pos_move(current, dir);
@@ -230,7 +246,12 @@ int calc_number_of_steps_to_target(map_t *map, pos_t start) {
         unvisited_count--;
         
         // If destination is visited, we are done.
-        if (map_is_visited(map, e)) {
+        if (is_part_two) {
+            if (map->grid[current.row][current.col == 0]) {
+                e = current;
+                break;
+            }
+        } else if (map_is_visited(map, e)) {
             break;
         }
 
@@ -283,23 +304,11 @@ int main() {
     print_map(&map);
     printf("\n");
 
-    int num_steps= calc_number_of_steps_to_target(&map, map.start_pos);
-    
     printf("=== Part 1 ===\n");
-    printf("\nsteps: %d\n", num_steps);
+    int num_steps= calc_number_of_steps_to_target(&map, false);
+    printf("steps: %d\n", num_steps);
 
-    printf("=== Part 2 ===\n");
-    
-    int min_num_steps = INT_MAX;
-    formap(row, col) {
-        pos_t p = { .row = row, .col = col };
-        if (map.grid[p.row][p.col] == 0) {
-            int steps = calc_number_of_steps_to_target(&map, p);
-            if (steps < min_num_steps) {
-                min_num_steps = steps;
-            }
-        }
-    }
-    
-    printf("\nsteps : %d\n", min_num_steps);
+    printf("\n=== Part 2 ===\n");
+    num_steps = calc_number_of_steps_to_target(&map, true);
+    printf("steps : %d\n", num_steps);
 }
