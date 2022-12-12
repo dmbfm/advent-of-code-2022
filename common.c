@@ -2,8 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define BRK __builtin_debugtrap()
+
 void panic(const char *msg) {
     printf("PANIC: %s\n", msg);
+    BRK;
     exit(1);
 }
 
