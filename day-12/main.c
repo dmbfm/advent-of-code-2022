@@ -193,7 +193,7 @@ void print_map_closed(map_t *m) {
     for (int a = 0; a < GRID_HEIGHT; a++) \
         for (int b = 0; b < GRID_WIDTH; b++) \
 
-int calc_number_of_steps_to_target(map_t *map, bool is_part_two) {
+void calc_number_of_steps_to_target(map_t *map, bool is_part_two) {
     
     pos_t s = is_part_two ? map->end_pos : map->start_pos;
     pos_t e = map->end_pos;
@@ -272,7 +272,7 @@ int calc_number_of_steps_to_target(map_t *map, bool is_part_two) {
         }
 
         if (min_dist == INT_MAX) {
-            return INT_MAX;
+            return;
         }
         
         // Select unvisited node with smallest tentative distance
@@ -282,33 +282,62 @@ int calc_number_of_steps_to_target(map_t *map, bool is_part_two) {
     // Count steps by retracing the path
     num_steps = 0;
     current = e;
+
+    pos_t path[4096];
+    int path_len = 0;
+    
     while (true) {
+
+        path[path_len++] = current;
+        
         if (pos_eql(s, current)) {
             break;
         }
         
-        
         current = map->prev[current.row][current.col];
         if (current.row < 0 || current.col < 0) {
-            return INT_MAX;
+            return;
         }
         num_steps++;
     }
 
-    return num_steps;
-}
+    formap(row, col) {
         
+        if (col == 0) {
+            printf("\n");
+        }
+
+        pos_t p = (pos_t) {row, col};
+
+        bool is_path = false;
+        
+        for (int i = 0; i < path_len; i++) {
+            if (pos_eql(p, path[i])) {
+                is_path = true;
+                break;
+            } 
+        }
+
+        if (is_path) {
+            printf("o");
+        } else {
+            printf("-");
+        }
+    }
+
+    printf("\nNumber of steps: %d\n", num_steps);
+}
+
 int main() {
     map_t map = {0};
     parse_map(&map);
     print_map(&map);
     printf("\n");
 
-    printf("=== Part 1 ===\n");
-    int num_steps= calc_number_of_steps_to_target(&map, false);
-    printf("steps: %d\n", num_steps);
-
-    printf("\n=== Part 2 ===\n");
-    num_steps = calc_number_of_steps_to_target(&map, true);
-    printf("steps : %d\n", num_steps);
+    printf("\n\n=== Part 1 ===\n");
+    calc_number_of_steps_to_target(&map, false);
+    
+    printf("\n\n=== Part 2 ===\n");
+    calc_number_of_steps_to_target(&map, true);
+    
 }
