@@ -283,7 +283,7 @@ void calc_number_of_steps_to_target(map_t *map, bool is_part_two) {
     num_steps = 0;
     current = e;
 
-    pos_t path[4096];
+    pos_t path[512];
     int path_len = 0;
     
     while (true) {
