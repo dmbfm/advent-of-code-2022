@@ -197,36 +197,44 @@ operation_t parse_operation(line_reader_t *r) {
     r->cur += 4;
 
     char ch = 0;
-    
+
+    bool failed = false;
+
     if (line_reader_next(r, &ch)) {
         if (ch == '+') {
             result.op = OpAdd;
         } else if (ch == '*') {
             result.op = OpMul;
         } else {
-            panic("?");
+            failed = true;
         }
     } else {
-        panic("!");
+        failed = true;
     }
 
-    line_reader_skip_next(r);
+    if (!failed) {
+        line_reader_skip_next(r);
 
-    ch = 0;
-    if (line_reader_peek(r, &ch)) {
-        if (ch == 'o') {
-            result.rhs = OpArgOld;
-            result.rhs_value = 0;
-            return result;
+        ch = 0;
+        if (line_reader_peek(r, &ch)) {
+            if (ch == 'o') {
+                result.rhs = OpArgOld;
+                result.rhs_value = 0;
+                return result;
+            }
         }
+
+        if (parse_number(r, &result.rhs_value)) {
+            result.rhs = OpArgNum;
+        } else {
+            failed = true;
+        }
+    }
+
+    if (failed) {
+        panic("Failed to parse operation!");
     }
     
-    if (parse_number(r, &result.rhs_value)) {
-        result.rhs = OpArgNum;
-    } else {
-        panic("$");
-    }
-
     return result;
 }
 
